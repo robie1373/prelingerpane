@@ -18,4 +18,9 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "faraday"
+  gem.add_dependency "faraday_middleware"
+  gem.add_dependency 'highline'
+
+  gem.add_development_dependency "rspec"
+  gem.add_development_dependency "guard"
 end
