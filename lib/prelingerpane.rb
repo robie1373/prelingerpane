@@ -1,5 +1,5 @@
-require "prelingerpane/version"
-require 'prelingerpane/prel_scrape'
+require_relative "prelingerpane/version"
+require_relative 'prelingerpane/prel_scrape'
 require 'json'
 require "highline/import"
 
@@ -23,54 +23,70 @@ module Prelingerpane
     # TODO write streaming code that the raspberry pi can use
   end
 
-  def self.display_metadata(doc, extension)
-    puts "\n------------------------------------------------------\n"
-    %w{title description creator format}.each do |metadata|
-      puts "#{metadata.capitalize}: #{doc[metadata]}\n"
+  def self.display_metadata(doc, extension, output = STDOUT)
+    output.puts "\n------------------------------------------------------\n"
+    metadata_to_show.each do |metadata|
+      output.puts "#{metadata.capitalize}: #{doc[metadata]}\n"
     end
-    puts "URL: #{create_url(doc, extension)}"
+    output.puts "URL: #{create_url(doc, extension)}"
   end
 
   def self.create_url(doc, extension)
     "http://archive.org/download/#{doc['identifier']}/#{doc['identifier']}#{extension}"
   end
 
-  def self.best_format(doc)
-    formats = ["512Kb MPEG4", "Ogg Video", "MPEG2", "HiRes MPEG4", "Animated GIF", "Thumbnail"]
-    (formats & doc['format']).first
+
+  def self.best_format(available_formats)
+    #puts "formats looks like: #{formats}"
+    (preferred_formats & available_formats).first
   end
 
   def self.get_extension(format)
-    { "512Kb MPEG4" => '_512kb.mp4', "Ogg Video" => '_3mb.ogv', "MPEG2" => '.mpeg',
-      "HiRes MPEG4" => '_edit.mp4', "Animated GIF" => '.gif',
-      "Thumbnail"   => '.thumbs/*' }[format]
+    extension_hash[format]
   end
 
   def self.run
-    search_path  = '/advancedsearch.php'
+    #search_path  = '/advancedsearch.php'
     search_token = %q{collection:"prelinger" } + self.title_keyword
 
     scraper = PrelScrape.new
-    json    = JSON.parse(scraper.search_results(search_path, search_token))
+    json    = JSON.parse(scraper.search_results(scraper.search_suffix, search_token))
 
     json['response']['docs'].each do |doc|
-      best_format = self.best_format(doc)
-      puts "Best format is: #{best_format}"
-
-      extension = self.get_extension(best_format)
-      puts "Extension is: #{extension}"
-
-      file_name = self.create_url(doc, extension)
-      puts "Filename is: #{file_name}"
-
+      this_best_format = self.best_format(doc['format'])
+      extension        = self.get_extension(this_best_format)
+      url              = self.create_url(doc, extension)
       self.display_metadata(doc, extension)
-      puts "Best available format is: #{self.best_format(doc)}"
-      self.download_video(doc, scraper, file_name, extension)
+      self.download_video(doc, scraper, url, extension)
+
+      puts "Extension is: #{extension}"
+      puts "URL is: #{url}"
+      puts "Best available format is: #{this_best_format}"
     end
 
     puts "Working..."
-    @threads.each { |t| t.join }
+    begin
+      @threads.each { |t| t.join }
+    rescue NoMethodError
+      puts "There were no results from that search."
+    end
   end
+
+  private
+  def self.metadata_to_show
+    %w{title description creator format}
+  end
+
+  def self.preferred_formats
+    ["512Kb MPEG4", "Ogg Video", "MPEG2", "HiRes MPEG4", "Animated GIF", "Thumbnail"]
+  end
+
+  def self.extension_hash
+    { "512Kb MPEG4" => '_512kb.mp4', "Ogg Video" => '_3mb.ogv', "MPEG2" => '.mpeg',
+      "HiRes MPEG4" => '_edit.mp4', "Animated GIF" => '.gif',
+      "Thumbnail"   => '.thumbs/*' }
+  end
+
 end
 
 =begin

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'prelingerpane'
+require_relative '../lib/prelingerpane'
 
 module Prelingerpane
   self.run
