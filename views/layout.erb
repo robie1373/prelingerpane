@@ -1,0 +1,159 @@
+<!DOCTYPE html />
+<html lang="en">
+
+<head>
+  <title>Prelinger Pane</title>
+  <style>
+      body {
+          background-color: #e0ffff;
+          witdh: 1000px;
+          /*margin: 50px auto;*/
+          font-family: Geneva, Arial, sans-serif;
+      }
+
+      header {
+          margin-top: 0px;
+      }
+
+      a:link {
+          color: #00008b;
+      }
+
+      a:visited {
+          color: #15f790;
+      }
+
+      a:hover {
+          color: #300002;
+      }
+
+      a:active {
+          color: yellow;
+      }
+
+      h1, h2 {
+          margin-top: 2em;
+      }
+
+      #main {
+          margin: 25px;
+      }
+
+      #head {
+          margin: 15px;
+      }
+
+      .title {
+          color: black;
+      }
+
+      .header {
+          margin-right: 1em;
+          /*background-color: #cccccc;*/
+          background-color: #4a4a4d;
+          color: #fffff0;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          padding-left: 12px;
+          padding-right: 120px;
+          border-radius: 5px 0 0 0;
+          text-decoration: none;
+          opacity: 0.6;
+          filter: alpha(opacity = 60);
+      }
+
+      .logtypes {
+          /*background-color: #cccccc;*/
+          background-color: #4a4a4d;
+          color: #fffff0;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          padding-left: 12px;
+          padding-right: 120px;
+          border-radius: 5px 0 0 0;
+          text-decoration: none;
+          opacity: 0.6;
+          filter: alpha(opacity = 60);
+      }
+
+      .logtext {
+          margin: 15px;
+          patding: 10px;
+          font-weight: bold;
+      }
+
+      div.transbox {
+          opacity: 0.60;
+          filter: alpha(opacity = 60);
+      }
+
+      div.log {
+          background-color: #909090;
+          margin: 15px;
+          patding: 10px;
+          border-radius: 10px;
+      }
+
+      div.log h3 p {
+          color: #000000;
+      }
+
+      input {
+          border-radius: 5px 0 0 0;
+          background: #cccccc;
+          color: #080808;
+          margin: 9px;
+      }
+
+      form {
+          color: #fffff0;
+      }
+
+      table, th, td, tr {
+          margin-left: 10px;
+          border-collapse: collapse;
+          padding: 10px;
+          /*margin: 10px;*/
+          border: 1px #708090;
+      }
+
+      td {
+          padding-left: 10px;
+      }
+
+          /*tr:nth-child(odd) {*/
+          /*background-color: #dcdcdc;*/
+
+          /*}*/
+
+          /*tr:nth-child(even) {*/
+          /*background-color: #fffff0;*/
+          /*}*/
+
+      table > tr:first-child {
+          border: 1px #708090;
+          border-radius: 5px;
+      }
+
+      a#about {
+          padding: 0;
+      }
+
+      li {
+          list-style: none;
+          padding-left: 0;
+          margin-left: 0;
+      }
+  </style>
+
+  <link rel="shortcut icon" href="favicon.ico">
+</head>
+
+<body>
+<header class="header">
+  <a href="/">home</a>
+  <a href="/about">about</a>
+</header>
+<%= yield %>
+</body>
+</html>

@@ -43,5 +43,14 @@ module Prelingerpane
         end
       end
     end
+
+    describe "#title_keyword" do
+      it "returns the default search if nothing is entered" do
+        output = StringIO.new
+        input = StringIO.new("\n")
+        input.rewind
+        Prelingerpane::title_keyword(input, output).should == 'title:"Health: "'
+      end
+    end
   end
 end

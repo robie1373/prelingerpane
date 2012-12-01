@@ -1,14 +1,27 @@
 require 'faraday'
 require 'faraday_middleware'
 require 'uri'
+require 'nokogiri'
 
 module Prelingerpane
   class PrelScrape
     include URI
     @rows = '6'
+    @video_path = File.join("public", "video")
 
     def initialize(url = 'http://archive.org')
-      @conn = Faraday.new(:url => url) do |faraday|
+      @conn = conn
+      #    Faraday.new(:url => url) do |faraday|
+      #  faraday.request :multipart
+      #  faraday.request :url_encoded
+      #  faraday.use FaradayMiddleware::FollowRedirects, limit: 3
+      #  faraday.response :logger
+      #  faraday.adapter Faraday.default_adapter
+      #end
+    end
+
+    def conn(url = 'http://archive.org')
+      Faraday.new(:url => url) do |faraday|
         faraday.request :multipart
         faraday.request :url_encoded
         faraday.use FaradayMiddleware::FollowRedirects, limit: 3
@@ -27,79 +40,95 @@ module Prelingerpane
     end
 
     def search_results(suffix = search_suffix, query = "date:[#{wayback_date}]")
-      response = conn.get suffix, { :q      => query,
-                                    :fl     => 'title',
-                                    :sort   => "avg_rating desc",
-                                    :rows   => '6',
-                                    :page   => '1',
-                                    :output => 'json' }
-
+      response = catch_garbage do
+        conn.get suffix, {:q => query,
+                                     :fl => 'title',
+                                     :sort => "avg_rating desc",
+                                     :rows => '6',
+                                     :page => '1',
+                                     :output => 'json'}
+      end
       response.body
     end
 
     def video(url, name)
-      host   = URI.parse(url).host
+      real_url = get_real_url url
+      host, suffix = break_url(real_url)
+      video = catch_garbage do
+        vid_download_conn("http://#{host}").get suffix
+      end
+      save_path = File.join(@video_path, name)
+      File.open(save_path, 'wb') { |f| f.write video.body }
+    end
+
+    def break_url(url)
+      host = URI.parse(url).host
       suffix = URI.parse(url).path
-      video  = vid_download_conn("http://#{host}").get suffix
-      #file_path = "#{name}_512kb.mp4"
-      File.open(name, 'wb') { |f| f.write video.body }
+      return host, suffix
     end
 
     def get_real_url(url)
-      p url
+      body = get_response_body(url)
+      links = parse_html_for_links body
+      link = links.keep_if { |i| i.match /\.ogv/ }.first
+      path = extract_path_from_tag link
+
+      host, suffix = break_url(url)
+      intermediate_paths = suffix.split('/')
+
+      [0, -1].each do |index|
+        intermediate_paths.delete_at(index)
+      end
+
+      intermediate_path = intermediate_paths.join('/')
+      "http://#{host}/#{intermediate_path}/#{path}"
+    end
+
+    def get_response_body(url)
       host = "http://#{URI.parse(url).host}"
-      p host
       suffix = URI.parse(url).path
-      parts  = suffix.split("/")
+      parts = suffix.split("/")
       parts.delete_at(-1)
       suffix = parts.join("/")
-      p suffix
       downloads_url = URI.join(host, suffix).to_s
-      #conn = Faraday.new(:url => host) do |faraday|
-      #  faraday.request :url_encoded
-      #  faraday.response :logger
-      #  faraday.adapter Faraday.default_adapter
-      #end
-      response      = @conn.get "/download/Evolution_of_Man/"
+      response = catch_garbage do
+        conn.get downloads_url
+      end
       response.body
     end
 
-=begin
-    require 'net/http'
-    def videonethttp(url, name)
-      host = URI.parse(url).host
-      suffix = URI.parse(url).path
+    def catch_garbage
+      old_stdout = $stdout
+      $stdout = StringIO.new
+      val = yield
+    ensure
+      $stdout = old_stdout
+      return val
+    end
 
-      Net::HTTP.start(host) do |http|
-        resp = http.get(suffix)
-        open(name, "wb") do |file|
-          file.write(resp.body)
-        end
-      end
-      puts "Done."
+    def parse_html_for_links(body)
+      html = Nokogiri::HTML(body)
+      links = []
+      html.xpath("//a").map { |i| links << i.to_s }
+      links
     end
-=end
-=begin
-    require 'open-uri'
-    def video_open_uri(url,name)
-      open(name, 'wb') do |fo|
-        fo.print open(url).read
-      end
+
+    def extract_path_from_tag(tag)
+      (tag.match /\<a href=".+"\>(.+)\<\/a\>/)[1]
     end
-=end
 
     def search_suffix
       '/advancedsearch.php'
     end
 
     private
-    def conn
-      @conn
-    end
+    #def conn
+    #  @conn
+    #end
 
     def wayback_date
-      d               = DateTime.now
-      year            = d.year - 60
+      d = DateTime.now
+      year = d.year - 60
       calculated_date = "#{year}-#{d.month}-#{d.day}"
       p calculated_date
       calculated_date

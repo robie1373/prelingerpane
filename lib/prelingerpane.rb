@@ -4,9 +4,10 @@ require 'json'
 require "highline/import"
 
 module Prelingerpane
-  def self.title_keyword
+  def self.title_keyword(input = STDIN, output = STDOUT)
+    console = HighLine.new(input, output)
     keyword = 'title:"Health: "'
-    input   = ask "Add a keyword to the search? (Press enter for default search.)"
+    input = console.ask "Add a keyword to the search? (Press enter for default search.)"
     if input.match /\w+/
       keyword = %Q{title:"#{input}"}
     end
@@ -15,7 +16,7 @@ module Prelingerpane
 
   def self.download_video(doc, scraper, url, extension)
     @threads = []
-    name     = "#{doc['identifier']}#{extension}"
+    name = "#{doc['identifier']}#{extension}"
     @threads << Thread.new { scraper.video(url, name) } if agree("Download this video? (y/n)")
   end
 
@@ -37,7 +38,6 @@ module Prelingerpane
 
 
   def self.best_format(available_formats)
-    #puts "formats looks like: #{formats}"
     (preferred_formats & available_formats).first
   end
 
@@ -46,16 +46,15 @@ module Prelingerpane
   end
 
   def self.run
-    #search_path  = '/advancedsearch.php'
     search_token = %q{collection:"prelinger" } + self.title_keyword
 
     scraper = PrelScrape.new
-    json    = JSON.parse(scraper.search_results(scraper.search_suffix, search_token))
+    json = JSON.parse(scraper.search_results(scraper.search_suffix, search_token))
 
     json['response']['docs'].each do |doc|
       this_best_format = self.best_format(doc['format'])
-      extension        = self.get_extension(this_best_format)
-      url              = self.create_url(doc, extension)
+      extension = self.get_extension(this_best_format)
+      url = self.create_url(doc, extension)
       self.display_metadata(doc, extension)
       self.download_video(doc, scraper, url, extension)
 
@@ -82,9 +81,9 @@ module Prelingerpane
   end
 
   def self.extension_hash
-    { "512Kb MPEG4" => '_512kb.mp4', "Ogg Video" => '_3mb.ogv', "MPEG2" => '.mpeg',
-      "HiRes MPEG4" => '_edit.mp4', "Animated GIF" => '.gif',
-      "Thumbnail"   => '.thumbs/*' }
+    {"512Kb MPEG4" => '_512kb.mp4', "Ogg Video" => '_3mb.ogv', "MPEG2" => '.mpeg',
+     "HiRes MPEG4" => '_edit.mp4', "Animated GIF" => '.gif',
+     "Thumbnail" => '.thumbs/*'}
   end
 
 end
