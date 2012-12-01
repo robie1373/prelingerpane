@@ -4,7 +4,7 @@ require 'json'
 require "highline/import"
 
 module Prelingerpane
-  def self.title_keyword(input = STDIN, output = STDOUT)
+  def self.title_keyword(input = $stdin, output = $stdout)
     console = HighLine.new(input, output)
     keyword = 'title:"Health: "'
     input = console.ask "Add a keyword to the search? (Press enter for default search.)"
@@ -14,10 +14,16 @@ module Prelingerpane
     keyword
   end
 
-  def self.download_video(doc, scraper, url, extension)
+  def self.download_video(doc, scraper, url, extension, interactive)
     @threads = []
     name = "#{doc['identifier']}#{extension}"
-    @threads << Thread.new { scraper.video(url, name) } if agree("Download this video? (y/n)")
+    if interactive
+      if agree("Download this video? (y/n)")
+        @threads << Thread.new { scraper.video(url, name) }
+      end
+    else
+      #@threads << Thread.new { scraper.video(url, name) }
+    end
   end
 
   def self.stream_video(doc, url)
@@ -45,30 +51,48 @@ module Prelingerpane
     extension_hash[format]
   end
 
-  def self.run
-    search_token = %q{collection:"prelinger" } + self.title_keyword
+  def self.run(input = $stdin, output = $stdout, interactive = false, search_term = "")
+    if interactive
+      search_token = %q{collection:"prelinger" } + self.title_keyword(input, output)
+    else
+      search_token = %q{collection:"prelinger" } + search_term
+    end
 
     scraper = PrelScrape.new
     json = JSON.parse(scraper.search_results(scraper.search_suffix, search_token))
 
+    result = Struct.new(:title, :description, :creator, :url)
+
+    result_objects = []
     json['response']['docs'].each do |doc|
       this_best_format = self.best_format(doc['format'])
       extension = self.get_extension(this_best_format)
       url = self.create_url(doc, extension)
-      self.display_metadata(doc, extension)
-      self.download_video(doc, scraper, url, extension)
+      self.display_metadata(doc, extension, output)
+      self.download_video(doc, scraper, url, extension, interactive)
 
-      puts "Extension is: #{extension}"
-      puts "URL is: #{url}"
-      puts "Best available format is: #{this_best_format}"
+
+      this_result = result.new
+      this_result.title = doc['title']
+      this_result.description = doc['description']
+      this_result.creator = doc['creator']
+      this_result.url = url
+      #output.puts "this_result has a title of #{this_result.title}\nand a URL of #{url}</br>"
+      if interactive
+        output.puts "Title is: #{this_result.title}"
+        output.puts "URL is: #{this_result.url}"
+        #output.puts "Best available format is: #{this_best_format}"
+      end
+      result_objects << this_result
     end
 
-    puts "Working..."
+    output.puts "Working..."
     begin
       @threads.each { |t| t.join }
     rescue NoMethodError
-      puts "There were no results from that search."
+      output.puts "There were no results from that search."
     end
+    result_objects
   end
 
   private

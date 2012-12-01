@@ -24,14 +24,25 @@
   <div id="find">
     <h2 class="title">Find something to watch</h2>
 
-      <!--<h2 class="logtypes">This is the warcards setup page</h2>-->
-
       <form method="POST" action="/index" class="logtypes">
         Name:
-        <input type="text" name="Search for:" value="searchstring" placeholder="Optional search" autofocus="autofocus"/>
+        <input type="text" name="searchstring" placeholder="Optional search" autofocus="autofocus"/>
         <br/>
         <input type="submit" id="search" value="Search"/>
       </form>
+
+    <ul>
+        <% @query_results.each do |result| %>
+          <li>
+            <p class="logtypes">
+              <a href="<%= result.url %>" target="_blank"><%= result.title %></a>
+              </br>
+              <%= result.description %>
+            </p>
+          </li>
+        <% end %>
+    </ul>
+
   </div>
 
   <div id="results">
@@ -39,8 +50,8 @@
 
     <form method="POST" action="/play" class="logtypes">
       <ul>
-        <% search_results = ["Placeholder 1", "Placeholder 2", "Placeholder 3"] %>
-        <% search_results.each do |result| %>
+        <% video_results = ["Placeholder 1", "Placeholder 2", "Placeholder 3"] %>
+        <% video_results.each do |result| %>
             <li>
               <input type="checkbox"/>
               <%= result %>

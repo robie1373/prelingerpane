@@ -10,7 +10,6 @@ module Prelingerpane
     describe "#search_results" do
 
       it "gets search results from archive.org" do
-
         suffix = @scraper.search_suffix
         query = %q{collection:"prelinger" } + %Q{title:"Health: "}
         @scraper.search_results(suffix, query).should match %r{title.+Health.+,}

@@ -9,6 +9,23 @@ configure do
 end
 
 get "/" do
+  @query_results = []
+  erb :index
+end
+
+get "/index" do
+  @query_results = []
+  erb :index
+end
+
+post "/index" do
+  @search_term = params['searchstring']
+  input = StringIO.new('\nn\nn\nn\nn\nn\nn\n\n')
+  input.rewind
+  output = StringIO.new
+  @query_results = Prelingerpane::run(input, output, false, @search_term)
+  output.rewind
+  @result = output.string
   erb :index
 end
 
@@ -22,6 +39,11 @@ post "/play" do
   erb :index
 end
 
-def reset_index
+get "/manage" do
+  erb :manage
+end
+
+def reset_index(args)
+  args.each  { |arg| args[arg] = "" }
   # clear any search related variables.
 end

@@ -2,5 +2,9 @@
 #`ruby ./app.rb`
 require_relative '../lib/prelingerpane'
 
-Prelingerpane::run
-
+Prelingerpane::run($stdin, $stdout, true)
+#res = Prelingerpane::run($stdin, $stdout, false, 'car')
+#res.each do |r|
+#  p r
+#  puts "\n"
+#end

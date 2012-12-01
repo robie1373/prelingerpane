@@ -16,7 +16,7 @@
       }
 
       a:link {
-          color: #00008b;
+          color: #00000e;
       }
 
       a:visited {
@@ -50,7 +50,7 @@
       .header {
           margin-right: 1em;
           /*background-color: #cccccc;*/
-          background-color: #4a4a4d;
+          background-color: #4a66a6;
           color: #fffff0;
           padding-top: 8px;
           padding-bottom: 8px;
@@ -64,7 +64,7 @@
 
       .logtypes {
           /*background-color: #cccccc;*/
-          background-color: #4a4a4d;
+          background-color: #4a66a6;
           color: #fffff0;
           padding-top: 8px;
           padding-bottom: 8px;
@@ -82,6 +82,14 @@
           font-weight: bold;
       }
 
+      #nowplaying {
+          margin: 0;
+          padding: 0;
+      }
+      #find {
+          margin: 0;
+          padding: 0;
+      }
       div.transbox {
           opacity: 0.60;
           filter: alpha(opacity = 60);
@@ -153,6 +161,7 @@
 <header class="header">
   <a href="/">home</a>
   <a href="/about">about</a>
+  <a href="/manage">manage</a>
 </header>
 <%= yield %>
 </body>
