@@ -6,8 +6,6 @@
   <div id="nowplaying">
     <h2 class="title">Now Playing</h2>
 
-    <% now_playing = Struct.new(:title, :description, :creator) %>
-    <% @now_playing = now_playing.new("Placeholder Title", "This is a placeholder description", "Robie") %>
     <p class="logtypes">
       <%= @now_playing.title %>
     </p>
@@ -50,11 +48,13 @@
 
     <form method="POST" action="/play" class="logtypes">
       <ul>
+        <% indexes = (0..(@query_results.length - 1)).to_a %>
+        <% query_results_hash = Hash[indexes.zip @query_results] %>
         <% video_results = ["Placeholder 1", "Placeholder 2", "Placeholder 3"] %>
-        <% video_results.each do |result| %>
+        <% query_results_hash.each_pair do |index, result| %>
             <li>
-              <input type="checkbox"/>
-              <%= result %>
+              <input type="checkbox" name = "playchoice" value="<%= index %>"/>
+              <%= result.title %>
             </li>
         <% end %>
 

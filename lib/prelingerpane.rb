@@ -1,5 +1,7 @@
 require_relative "prelingerpane/version"
 require_relative 'prelingerpane/prel_scrape'
+require_relative 'prelingerpane/player'
+require_relative 'prelingerpane/video_metadata'
 require 'json'
 require "highline/import"
 
@@ -61,7 +63,7 @@ module Prelingerpane
     scraper = PrelScrape.new
     json = JSON.parse(scraper.search_results(scraper.search_suffix, search_token))
 
-    result = Struct.new(:title, :description, :creator, :url)
+    #result = Struct.new(:title, :description, :creator, :url)
 
     result_objects = []
     json['response']['docs'].each do |doc|
@@ -72,7 +74,7 @@ module Prelingerpane
       self.download_video(doc, scraper, url, extension, interactive)
 
 
-      this_result = result.new
+      this_result = VideoMetadata.new
       this_result.title = doc['title']
       this_result.description = doc['description']
       this_result.creator = doc['creator']

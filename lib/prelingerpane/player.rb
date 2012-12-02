@@ -4,18 +4,18 @@ module Prelingerpane
       @url = url
     end
 
-    def play(url)
-      raspberypi_play(url) if RUBY_PLATFORM =~ /(armv6l-linux-eabi)/i
-      osx_play(url) if RUBY_PLATFORM =~ /(darwin)/i
+    def play
+      raspberypi_play if RUBY_PLATFORM =~ /(armv6l-linux-eabi)/i
+      osx_play if RUBY_PLATFORM =~ /(darwin)/i
     end
 
-    def osx_play(url)
+    def osx_play
       Thread.new do
-        `vlc #{url}`
+        `/Applications/VLC.app/Contents/MacOS/VLC #{url}`
       end
     end
 
-    def raspberypi_play(url)
+    def raspberypi_play
       Thread.new do
         `omxplayer #{url}`
       end
