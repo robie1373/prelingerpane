@@ -17,7 +17,7 @@ module Prelingerpane
 
     def raspberypi_play
       Thread.new do
-        `omxplayer #{url}`
+        `omxplayer #{url} & fbset -depth 8 && fbset -depth 16`
       end
     end
 

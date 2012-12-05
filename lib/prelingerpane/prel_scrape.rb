@@ -6,7 +6,7 @@ require 'nokogiri'
 module Prelingerpane
   class PrelScrape
     include URI
-    @rows = '6'
+    @rows       = '6'
     @video_path = File.join("public", "video")
 
     def initialize(url = 'http://archive.org')
@@ -41,39 +41,43 @@ module Prelingerpane
 
     def search_results(suffix = search_suffix, query = "date:[#{wayback_date}]")
       response = catch_garbage do
-        conn.get suffix, {:q => query,
-                                     :fl => 'title',
-                                     :sort => "avg_rating desc",
-                                     :rows => '6',
-                                     :page => '1',
-                                     :output => 'json'}
+        conn.get suffix, { :q      => query,
+                           :fl     => 'title',
+                           :sort   => "avg_rating desc",
+                           :rows   => '6',
+                           :page   => '1',
+                           :output => 'json' }
       end
-      response.body
+      begin
+        response.body
+      rescue NoMethodError
+        "No Data was received from archive.org. Are you online?"
+      end
     end
 
-    def video(url, name)
-      real_url = get_real_url url
+    def video(url, name, path = @video_path)
+      real_url     = get_real_url url
       host, suffix = break_url(real_url)
-      video = catch_garbage do
+      video        = catch_garbage do
         vid_download_conn("http://#{host}").get suffix
       end
-      save_path = File.join(@video_path, name)
+      save_path    = File.join(path, name)
       File.open(save_path, 'wb') { |f| f.write video.body }
     end
 
     def break_url(url)
-      host = URI.parse(url).host
+      host   = URI.parse(url).host
       suffix = URI.parse(url).path
       return host, suffix
     end
 
     def get_real_url(url)
-      body = get_response_body(url)
+      body  = get_response_body(url)
       links = parse_html_for_links body
-      link = links.keep_if { |i| i.match /\.ogv/ }.first
-      path = extract_path_from_tag link
+      link  = links.keep_if { |i| i.match /\.ogv/ }.first
+      path  = extract_path_from_tag link
 
-      host, suffix = break_url(url)
+      host, suffix       = break_url(url)
       intermediate_paths = suffix.split('/')
 
       [0, -1].each do |index|
@@ -85,13 +89,13 @@ module Prelingerpane
     end
 
     def get_response_body(url)
-      host = "http://#{URI.parse(url).host}"
+      host   = "http://#{URI.parse(url).host}"
       suffix = URI.parse(url).path
-      parts = suffix.split("/")
+      parts  = suffix.split("/")
       parts.delete_at(-1)
-      suffix = parts.join("/")
+      suffix        = parts.join("/")
       downloads_url = URI.join(host, suffix).to_s
-      response = catch_garbage do
+      response      = catch_garbage do
         conn.get downloads_url
       end
       response.body
@@ -99,15 +103,15 @@ module Prelingerpane
 
     def catch_garbage
       old_stdout = $stdout
-      $stdout = StringIO.new
-      val = yield
+      $stdout    = StringIO.new
+      val        = yield
     ensure
       $stdout = old_stdout
       return val
     end
 
     def parse_html_for_links(body)
-      html = Nokogiri::HTML(body)
+      html  = Nokogiri::HTML(body)
       links = []
       html.xpath("//a").map { |i| links << i.to_s }
       links
@@ -127,8 +131,8 @@ module Prelingerpane
     #end
 
     def wayback_date
-      d = DateTime.now
-      year = d.year - 60
+      d               = DateTime.now
+      year            = d.year - 60
       calculated_date = "#{year}-#{d.month}-#{d.day}"
       p calculated_date
       calculated_date

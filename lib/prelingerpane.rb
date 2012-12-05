@@ -1,6 +1,7 @@
 require_relative "prelingerpane/version"
 require_relative 'prelingerpane/prel_scrape'
 require_relative 'prelingerpane/player'
+require_relative 'prelingerpane/saver'
 require_relative 'prelingerpane/video_metadata'
 require 'json'
 require "highline/import"

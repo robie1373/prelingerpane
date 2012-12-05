@@ -1,4 +1,4 @@
-<div id="main">
+<div id="main" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
   <div id="head">
     <h1 class="title">Prelinger Pane</h1>
   </div>
@@ -47,20 +47,37 @@
     <h2 class="title">Results</h2>
 
     <form method="POST" action="/play" class="logtypes">
+      <h2 class="logtypes">Play</h2>
       <ul>
         <% indexes = (0..(@query_results.length - 1)).to_a %>
         <% query_results_hash = Hash[indexes.zip @query_results] %>
         <% video_results = ["Placeholder 1", "Placeholder 2", "Placeholder 3"] %>
         <% query_results_hash.each_pair do |index, result| %>
             <li>
-              <input type="checkbox" name = "playchoice" value="<%= index %>"/>
+              <input type="radio" name = "playchoice" value="<%= index %>"/>
+              <%= result.title %>
+            </li>
+        <% end %>
+      </ul>
+      <input type="submit" id="play" value="Play one" />
+    </form>
+
+    <form method="POST" action="/save" class="logtypes">
+      <h2 class="logtypes">Save</h2>
+      <ul>
+        <% indexes = (0..(@query_results.length - 1)).to_a %>
+        <% query_results_hash = Hash[indexes.zip @query_results] %>
+        <% query_results_hash.each_pair do |index, result| %>
+            <li>
+              <input type="checkbox" name = "savechoice[]" value="<%= index %>" />
               <%= result.title %>
             </li>
         <% end %>
 
       </ul>
-      <input type="submit" id="play" value="Play selected"/>
+        <input type="submit" id="save" value="Save selected" />
     </form>
+
   </div>
 
 </div>
