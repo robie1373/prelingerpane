@@ -1,0 +1,35 @@
+<div id="main">
+  <div id="head">
+    <h1 class="title">Prelinger local files to play</h1>
+  </div>
+
+  <div id="nowplaying">
+    <h2 class="title">now playing</h2>
+
+    <p class="logtypes">
+      <%= @now_playing.title %>
+    </p>
+
+    <p class="logtypes">
+      <%= @now_playing.description %>
+    </p>
+
+    <p class="logtypes">
+      <%= @now_playing.creator %>
+    </p>
+  </div>
+
+  <div id="filelist">
+    <h2 class="title">locally stored files</h2>
+    <ul>
+      <% @files.each do |file| %>
+          <li>
+            <p class="logtypes">
+              <%= file %>
+            </p>
+          </li>
+      <% end %>
+    </ul>
+    <p class="logtypes">#TODO</p>
+  </div>
+</div>

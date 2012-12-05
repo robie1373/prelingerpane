@@ -1,4 +1,5 @@
 require 'uri'
+require 'fileutils'
 
 module Prelingerpane
   class VideoSaver

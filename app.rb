@@ -53,6 +53,15 @@ get "/manage" do
   erb :manage
 end
 
+get "/local" do
+  @now_playing          = now_playing
+  curdir = Dir.pwd
+  Dir.chdir(save_location)
+  @files = Dir.glob "*"
+  Dir.chdir curdir
+  erb :local
+end
+
 post "/play" do
   #puts "post /play session is ---> #{session}"
   #puts "post /play session[:query_results] is ---> #{session[:query_results]}"
@@ -74,6 +83,12 @@ post "/save" do
   output         = StringIO.new
   @query_results = Prelingerpane::run(input, output, false, session[:search_term])
   erb :index
+end
+
+def save_location
+      loc = File.join(ENV['HOME'], "Movies", "PrelingerPane") if RUBY_PLATFORM =~ /(darwin)/i
+      loc = File.join(ENV['HOME'], "mnt", "usb", "PrelingerPane") if RUBY_PLATFORM =~ /(armv6l-linux-eabi)/i
+      loc
 end
 
 def play
