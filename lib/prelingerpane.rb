@@ -7,6 +7,9 @@ require 'json'
 require "highline/import"
 
 module Prelingerpane
+  RASPI_SAVE_LOC = File.join(ENV['HOME'], "Movies", "PrelingerPane")
+  OSX_SAVE_LOC = File.join(ENV['HOME'], "mnt", "usb", "PrelingerPane")
+
   def self.title_keyword(input = $stdin, output = $stdout)
     console = HighLine.new(input, output)
     keyword = 'title:"Health: "'
@@ -58,6 +61,7 @@ module Prelingerpane
     if interactive
       search_token = %q{collection:"prelinger" } + self.title_keyword(input, output)
     else
+      search_term = search_term || ""
       search_token = %q{collection:"prelinger" } + search_term
     end
 

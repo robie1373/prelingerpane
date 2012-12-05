@@ -5,6 +5,8 @@
 
   <div id="nowplaying">
     <h2 class="title">now playing</h2>
+    <p class="logtypes"><%= @params %></p>
+    <p class="logtypes"><%= @data %></p>
 
     <p class="logtypes">
       <%= @now_playing.title %>
@@ -20,16 +22,26 @@
   </div>
 
   <div id="filelist">
-    <h2 class="title">locally stored files</h2>
+
+  <form method="POST" action="/play" class="logtypes">
+    <h2 class="logtypes">play a local file</h2>
     <ul>
-      <% @files.each do |file| %>
+      <% indexes = (0..(@query_results.length - 1)).to_a %>
+      <% query_results_hash = Hash[indexes.zip @query_results] %>
+      <% video_results = ["Placeholder 1", "Placeholder 2", "Placeholder 3"] %>
+      <% query_results_hash.each_pair do |index, result| %>
           <li>
-            <p class="logtypes">
-              <%= file %>
-            </p>
+            <input type="radio" name = "playchoice" value="<%= index %>"/>
+            <%= result.title %>
           </li>
       <% end %>
     </ul>
-    <p class="logtypes">#TODO</p>
+    <input type="submit" id="play" value="Play one" />
+  </form>
+
+
+
+
+
   </div>
 </div>
