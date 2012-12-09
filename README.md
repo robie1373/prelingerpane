@@ -10,24 +10,34 @@ Continue with one of the many fine intro to raspberry pi tuts out there until yo
 #### Install Ruby
 Since I like ruby, that's what Prelingerpane is written in. You'll need to install it in order to use PP. A good guide is available from [elinux.org](http://elinux.org/RPi_Ruby_on_Rails)
 _Note: When you get to the part where you infall RVM you can omit rails. You don't that that and it will save you time and space._
-> `curl -L get.rvm.io | bash -s stable`
+
+`curl -L get.rvm.io | bash -s stable`
 _That will do the job. Carry on._
+
 #### Set up some local directories
 Pi's are often run on fairly small disks, and don't have a lot of room to spare. Since one of the features of PP is the ability to store some video locally for what ever reason your little heart desires we'll set up a place to mount a USB stick. If you don't use a USB stick, you'll still need the directory to store downloaded files.
-> `mkdir -p ~/mnt/usb`
+
+`mkdir -p ~/mnt/usb`
+
 to mount the USB stick at boot time
-> `sudo echo /dev/disk2 /home/pi/mnt/usb #TODO mount options`
+`sudo echo /dev/disk2 /home/pi/mnt/usb #TODO mount options`
 I also like to keep my home directories neat so I created a `~/apps` directory and installed PP there. That's nice in case you decide to run another app on your pi later.
-> `mkdir ~/apps/`
+
+`mkdir ~/apps/`
+
 #### Install Prelingerpane
 finally time for the magic. Prelingerpane is a Sinatra app which I recommend cloning out of the git repo. This will give you the latest version.
-> `cd ~/apps`
-> `git clone https://github.com/robie1373/prelingerpane.git`
-> `cd prelingerpane && bundle install`
+
+`cd ~/apps`
+
+`git clone https://github.com/robie1373/prelingerpane.git`
+
+`cd prelingerpane && bundle install`
+
 #### Run Prelingerpane
 Right now I'm just manually running the ruby app from SSH. I would like to provide a nice init script so it can be started, stopped and bounced from the web interface but I haven't gotten to that yet.  You know you'll see it here when I do.
 In the meantime just log into you pi and 
-> `ruby ~/apps/prelingerpane/app.rb &`
+`ruby ~/apps/prelingerpane/app.rb &`
 As a side effect, you'll see some logging type info (_as well as some crufty instrumentation I may have forgotten to clean up_) scroll by.
 
 ## Usage
