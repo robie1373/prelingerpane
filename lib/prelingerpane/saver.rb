@@ -26,14 +26,14 @@ module Prelingerpane
       if File.directory?(save_location)
         #puts ("URl ---> #{url}")
         #puts ("name ---> #{name}")
-        #puts ("save_location ---> #{save_location}")
+        puts ("save_location ---> #{save_location}")
         @scraper.video(url, name, save_location)
       else
         puts "making Directory #{save_location}"
         FileUtils.mkdir_p save_location
         #puts ("URl ---> #{url}")
         #puts ("name ---> #{name}")
-        #puts ("save_location ---> #{save_location}")
+        puts ("save_location ---> #{save_location}")
         @scraper.video(url, name, save_location)
       end
     end

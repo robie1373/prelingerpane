@@ -7,8 +7,8 @@ require 'json'
 require "highline/import"
 
 module Prelingerpane
-  RASPI_SAVE_LOC = File.join(ENV['HOME'], "Movies", "PrelingerPane")
-  OSX_SAVE_LOC = File.join(ENV['HOME'], "mnt", "usb", "PrelingerPane")
+  OSX_SAVE_LOC = File.join(ENV['HOME'], "Movies", "PrelingerPane")
+  RASPI_SAVE_LOC = File.join(ENV['HOME'], "mnt", "usb", "PrelingerPane")
 
   def self.title_keyword(input = $stdin, output = $stdout)
     console = HighLine.new(input, output)

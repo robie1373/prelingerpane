@@ -6,7 +6,7 @@ require 'nokogiri'
 module Prelingerpane
   class PrelScrape
     include URI
-    @rows       = '6'
+    @rows       = '25'
     @video_path = File.join("public", "video")
 
     def initialize(url = 'http://archive.org')
@@ -44,7 +44,7 @@ module Prelingerpane
         conn.get suffix, { :q      => query,
                            :fl     => 'title',
                            :sort   => "avg_rating desc",
-                           :rows   => '6',
+                           :rows   => @rows,
                            :page   => '1',
                            :output => 'json' }
       end

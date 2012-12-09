@@ -1,10 +1,10 @@
 <div id="main" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
   <div id="head">
-    <h1 class="title">Prelinger Pane</h1>
+    <h1 class="title">prelinger pane</h1>
   </div>
 
   <div id="nowplaying">
-    <h2 class="title">Now Playing</h2>
+    <h2 class="title">now playing</h2>
 
     <p class="logtypes">
       <%= @now_playing.title %>
@@ -20,10 +20,10 @@
   </div>
 
   <div id="find">
-    <h2 class="title">Find something to watch</h2>
+    <h2 class="title">find something to watch</h2>
 
       <form method="POST" action="/index" class="logtypes">
-        Name:
+        name:
         <input type="text" name="searchstring" placeholder="Optional search" autofocus="autofocus"/>
         <br/>
         <input type="submit" id="search" value="Search"/>
@@ -44,10 +44,10 @@
   </div>
 
   <div id="results">
-    <h2 class="title">Results</h2>
+    <h2 class="title">results</h2>
 
     <form method="POST" action="/play" class="logtypes">
-      <h2 class="logtypes">Play</h2>
+      <h2 class="logtypes">play</h2>
       <ul>
         <% indexes = (0..(@query_results.length - 1)).to_a %>
         <% query_results_hash = Hash[indexes.zip @query_results] %>
@@ -63,7 +63,7 @@
     </form>
 
     <form method="POST" action="/save" class="logtypes">
-      <h2 class="logtypes">Save</h2>
+      <h2 class="logtypes">save</h2>
       <ul>
         <% indexes = (0..(@query_results.length - 1)).to_a %>
         <% query_results_hash = Hash[indexes.zip @query_results] %>
