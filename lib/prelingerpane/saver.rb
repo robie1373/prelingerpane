@@ -10,10 +10,10 @@ module Prelingerpane
     end
 
     def save_files
-      to_save.each do |choice|
-        puts "\n#{'-|/'*20}Saving #{url_to_filename(choice.url)}\n#{'-'*20}"
+      [to_save].flatten.each do |choice|
+        $stdout.puts "\n#{'-|/'*20}Saving #{url_to_filename(choice.url)}\n#{'-'*20}"
         save(choice.url, url_to_filename(choice.url))
-        puts "\n#{'-|?'*20}Done saving #{url_to_filename(choice.url)}\n#{'-'*20}"
+        $stdout.puts "\n#{'-|?'*20}Done saving #{url_to_filename(choice.url)}\n#{'-'*20}"
       end
     end
 
@@ -39,8 +39,8 @@ module Prelingerpane
     end
 
     def save_location
-      loc = OSX_SAVE_LOC if RUBY_PLATFORM =~ /(darwin)/i
-      loc = RASPI_SAVE_LOC if RUBY_PLATFORM =~ /(armv6l-linux-eabi)/i
+      loc = Prelingerpane::OSX_SAVE_LOC if RUBY_PLATFORM =~ /(darwin)/i
+      loc = Prelingerpane::RASPI_SAVE_LOC if RUBY_PLATFORM =~ /(armv6l-linux-eabi)/i
       loc
     end
 

@@ -6,10 +6,10 @@ require 'nokogiri'
 module Prelingerpane
   class PrelScrape
     include URI
-    @rows       = '25'
+    @rows       = 6
     @video_path = File.join("public", "video")
 
-    def initialize(url = 'http://archive.org')
+    def initialize
       @conn = conn
       #    Faraday.new(:url => url) do |faraday|
       #  faraday.request :multipart

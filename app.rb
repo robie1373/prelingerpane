@@ -100,7 +100,9 @@ post "/save" do
   #puts "post /save session[:query_results] is ---> #{session[:query_results]}"
 
   @now_playing = now_playing
-  save
+  p params['savechoice'].inspect
+  puts "--->/save session[:query_results] is #{session[:query_results]}"
+  save(params['savechoice'], session[:query_results])
   input = StringIO.new
   output = StringIO.new
   @query_results = Prelingerpane::run(input, output, false, session[:search_term])
@@ -120,13 +122,18 @@ def play
   end
 end
 
-def save
+def save(form_results, query_results)
+  puts "---> in app.rb#save"
   to_save = []
-  params['savechoice'].each do |choice|
-    to_save << session[:query_results][choice.to_i]
+  form_results.each do |choice|
+    puts "---> in app.rb#save loop"
+    puts "---> query_results == #{query_results} and choice == #{choice}"
+    to_save << query_results[choice.to_i]
+    p to_save.inspect
   end
   #puts "to_save (app.rb) ---> #{to_save}"
   saver = Prelingerpane::VideoSaver.new(to_save, Prelingerpane::PrelScrape.new)
+  puts "---> after creating saver in app.rb#save"
   #puts "saver (app.rb) ---> #{saver}"
   Thread.new do
     puts "---> (app.rb) in Thread.new"
