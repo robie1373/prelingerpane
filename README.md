@@ -1,13 +1,22 @@
 # Prelingerpane
+
 ## what
-A ruby gem intended to be run on Raspberry Pi. Attach to a vintage tv for maximum ambiance. 
+
+A ruby gem intended to be run on Raspberry Pi. Attach to a vintage tv for maximum ambiance.
+
 ## why
-Because I was raised in a bubble of the '50's which emerged during the late 70's. 
+
+Because I was raised in a bubble of the '50's which emerged during the late 70's.
+
 ## Installation
+
 #### Set up your pi
+
 I'm using the [Occidentalis](http://learn.adafruit.com/adafruit-raspberry-pi-educational-linux-distro/) distro from Adafruit. It comes with some extras that I wanted and they are the poop. Start [here](http://learn.adafruit.com/adafruit-raspberry-pi-lesson-1-preparing-and-sd-card-for-your-raspberry-pi) if you are just beginning.
 Continue with one of the many fine intro to raspberry pi tuts out there until you have a basic, configured rpi.
+
 #### Install Ruby
+
 Since I like ruby, that's what Prelingerpane is written in. You'll need to install it in order to use PP. A good guide is available from [elinux.org](http://elinux.org/RPi_Ruby_on_Rails)
 _Note: When you get to the part where you infall RVM you can omit rails. You don't that that and it will save you time and space._
 
@@ -15,17 +24,21 @@ _Note: When you get to the part where you infall RVM you can omit rails. You don
 _That will do the job. Carry on._
 
 #### Set up some local directories
+
 Pi's are often run on fairly small disks, and don't have a lot of room to spare. Since one of the features of PP is the ability to store some video locally for what ever reason your little heart desires we'll set up a place to mount a USB stick. If you don't use a USB stick, you'll still need the directory to store downloaded files.
 
 `mkdir -p ~/mnt/usb`
 
 to mount the USB stick at boot time
+
 `sudo echo /dev/disk2 /home/pi/mnt/usb #TODO mount options`
+
 I also like to keep my home directories neat so I created a `~/apps` directory and installed PP there. That's nice in case you decide to run another app on your pi later.
 
 `mkdir ~/apps/`
 
 #### Install Prelingerpane
+
 finally time for the magic. Prelingerpane is a Sinatra app which I recommend cloning out of the git repo. This will give you the latest version.
 
 `cd ~/apps`
@@ -35,10 +48,13 @@ finally time for the magic. Prelingerpane is a Sinatra app which I recommend clo
 `cd prelingerpane && bundle install`
 
 #### Run Prelingerpane
+
 Right now I'm just manually running the ruby app from SSH. I would like to provide a nice init script so it can be started, stopped and bounced from the web interface but I haven't gotten to that yet.  You know you'll see it here when I do.
-In the meantime just log into you pi and 
+In the meantime just log into you pi and
+
 `ruby ~/apps/prelingerpane/app.rb &`
-As a side effect, you'll see some logging type info (_as well as some crufty instrumentation I may have forgotten to clean up_) scroll by.
+
+As a side effect, you'll see some logging type info ( _as well as some crufty instrumentation I may have forgotten to clean up_ ) scroll by.
 
 ## Usage
 
@@ -52,14 +68,18 @@ Manage doesn't do anything yet.
 About tells you usefulish things.
 
 ## Known issues
+
 Too many to count at this point, but here are a few.
 * Doesn't play .ogv which sucks since many of Prelinger's videos are Oggs.
 * No feedback on downloads
 * Very little error handling
 * No proper logging
 * Not secure in any way. Seriously. Do not put this on an untrusted network. Also, the Internet is definitely not trusted.
+
 Please let me know if you find any bugs/things-I-just-didn't-finish by opening an issue [here](https://github.com/robie1373/prelingerpane/issues)
+
 ## Thanks
+
 Again too many to count. In particular I leaned on 
 * [Adafruit](http://www.adafruit.com/) Please buy their things. They're awesome.
 * [elinux.org](http://elinux.org/) They seem to have just the right amount of detail on Linux-y things. 
