@@ -5,7 +5,8 @@ require_relative 'lib/prelingerpane'
 set :protection, :except => :ip_spoofing
 
 configure do
-  enable :sessions
+  #enable :sessions
+  use Rack::Session::Pool
 end
 
 #Result      = Struct.new(:title, :description, :creator, :url)
@@ -88,6 +89,7 @@ post "/play" do
   #puts "post /play session is ---> #{session}"
   #puts "post /play session[:query_results] is ---> #{session[:query_results]}"
   @now_playing = session[:query_results][params['playchoice'].to_i]
+  #@pid = play
   play
   input = StringIO.new
   output = StringIO.new
@@ -120,6 +122,7 @@ def play
   Thread.new do
     player.play
   end
+  #$?.pid
 end
 
 def save(form_results, query_results)
