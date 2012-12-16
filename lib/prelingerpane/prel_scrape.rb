@@ -6,7 +6,7 @@ require 'nokogiri'
 module Prelingerpane
   class PrelScrape
     include URI
-    @rows       = 6
+    @rows       = 25
     @video_path = File.join("public", "video")
 
     def initialize
