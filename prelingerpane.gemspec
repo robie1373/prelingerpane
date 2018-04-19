@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "faraday"
   gem.add_dependency "faraday_middleware"
   gem.add_dependency 'highline'
-  gem.add_dependency 'nokogiri', "~> 1.5.5"
+  gem.add_dependency 'nokogiri', "~> 1.8.2"
   gem.add_dependency "sinatra"
   gem.add_dependency "thin"
 
